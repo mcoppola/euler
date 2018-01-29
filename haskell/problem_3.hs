@@ -4,8 +4,18 @@
 
 module P3 where
 
-	factors n = [x | x <- [1..n], mod n x == 0]
+  factors :: Int -> [Int]
+  factors m = f m (head primes) (tail primes) where
+    f m n ns
+      | m < 2 = []
+      | m < n ^ 2 = [m]   -- stop early
+      | m `mod` n == 0 = n : f (m `div` n) n ns
+      | otherwise = f m (head ns) (tail ns)
 
-	prime n = factors n == [1,n]
 
-	main = print (prime (factors 600851475143))
+  primes :: [Int]
+  primes = 2 : filter (\n-> head (factors n) == n) [3,5..]
+
+
+  main :: IO ()
+  main = print (last (factors 600851475143))
